@@ -12,7 +12,7 @@ code {
     monospace;
 }
 
-.App{
+.App {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,22 +20,88 @@ code {
   flex-direction: column;
 }
 
-.formStyle{
+.formStyle {
   padding: 20px;
   border: 1px solid black;
   width: 25%;
   text-align: center;
 }
 
-.form-control{
+.form-control {
   border-color: black !important;
 }
 
-.pdf-div{
+.pdf-div {
   padding: 50px;
   background-color: #dedede;
   margin-top: 50px;
 }
+
 .react-pdf__Page__canvas {
   margin-bottom: 40px;
+}
+
+/* Sidebar and Content Styles */
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #f4f4f4;
+  border-right: 1px solid #ccc;
+  padding: 20px;
+}
+
+.sidebar h3 {
+  margin-top: 0;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+}
+
+.sidebar li:hover {
+  background-color: #ddd;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  overflow: auto;
+}
+
+.selected-text {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.selected-text h4 {
+  margin-top: 0;
+}
+
+.selected-text p {
+  white-space: pre-wrap;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.react-pdf__Page__textContent {
+  opacity: 0; /* Hide the text layer visually */
+  pointer-events: none; /* Prevent interaction with text layer directly */
+}
+
+.react-pdf__Page__textContent span {
+  opacity: 1; /* Ensure text is selectable */
+  pointer-events: auto; /* Allow interaction for text selection */
 }
