@@ -1,0 +1,9 @@
+.pdf-document {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pdf-page {
+  margin: 16px 0; /* Add spacing between pages */
+}

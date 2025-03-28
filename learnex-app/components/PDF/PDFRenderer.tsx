@@ -144,13 +144,6 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
               onLoadSuccess={async ({ numPages }) => {
                 setTotalPages(numPages);
                 setLoading(false);
-
-                // for (let i = 1; i <= numPages; i++) {
-                //   const page = await getPage(i);
-                //   const text = await page.getTextContent();
-
-                //   console.log("Page", i, text);
-                // }
               }}
               onLoadError={({}) => {
                 toast({
@@ -160,24 +153,16 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
                 });
                 setLoading(false);
               }}
-              className="max-h-full flex justify-center items-center"
+              className="max-h-full flex flex-col justify-center items-center" // Ensure vertical stacking
             >
-              <Page
-                width={width ? width : 1}
-                loading={
-                  <div className="flex justify-center items-center">
-                    <div className="animate-spin my-24">
-                      <Loader2 size="64" />
-                    </div>
-                  </div>
-                }
-                onLoadSuccess={(page) => {}}
-                className="pdf-page flex-1"
-                pageNumber={currentPage}
-                scale={scale}
-
-                // canvasBackground="rgba(0, 0, 0, 0)"
-              />
+              {/* Render all pages dynamically */}
+              {Array.from(new Array(totalPages), (el, index) => (
+                <Page
+                  key={`page_${index + 1}`}
+                  pageNumber={index + 1}
+                  className="my-4" // Add spacing between pages
+                />
+              ))}
             </Document>
           </div>
         </SimpleBar>
