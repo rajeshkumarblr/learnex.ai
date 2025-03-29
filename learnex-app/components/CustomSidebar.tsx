@@ -1,80 +1,21 @@
+"use client";
 import React from "react";
-import { SideBar, SideBarSection, SidebarItem } from "@/components/ui/sideBar";
+import { SideBar, SideBarSection } from "@/components/ui/sideBar";
+import Link from "next/link";
 
 const CustomSideBar = () => {
   return (
-    <SideBar className="border-r bg-background">
-      <SideBarSection title="Physics" link="/subjects/physics">
-        <SidebarItem
-          title="Chapter 1"
-          items={[
-            {
-              name: "Section 1.1",
-              link: "/subjects/physics/chapter/1/section/1.1",
-            },
-            {
-              name: "Section 1.2",
-              link: "/subjects/physics/chapter/1/section/1.2",
-            },
-          ]}
-        />
-        <SidebarItem
-          title="Chapter 2"
-          items={[
-            {
-              name: "Section 1.1",
-              link: "/subjects/physics/chapter/2/section/1.1",
-            },
-            {
-              name: "Section 1.2",
-              link: "/subjects/physics/chapter/2/section/1.2",
-            },
-          ]}
-        />
-      </SideBarSection>
-
-      <SideBarSection title="Mathematics" link="/subjects/mathematics">
-        <SidebarItem
-          title="Chapter 1"
-          items={[
-            {
-              name: "Section 1.1",
-              link: "/subjects/mathematics/chapter/1/section/1.1",
-            },
-            {
-              name: "Section 1.2",
-              link: "/subjects/mathematics/chapter/1/section/1.2",
-            },
-          ]}
-        />
-        <SidebarItem
-          title="Chapter 2"
-          items={[
-            {
-              name: "Section 1.1",
-              link: "/subjects/mathematics/chapter/2/section/1.1",
-            },
-            {
-              name: "Section 1.2",
-              link: "/subjects/mathematics/chapter/2/section/1.2",
-            },
-          ]}
-        />
-      </SideBarSection>
-      <SideBarSection title="English" link="/subjects/english">
-        <SidebarItem
-          title="Chapter 1"
-          items={[
-            {
-              name: "Section 1.1",
-              link: "/subjects/english/chapter/1/section/1.1",
-            },
-            {
-              name: "Section 1.2",
-              link: "/subjects/english/chapter/1/section/1.2",
-            },
-          ]}
-        />
+    <SideBar className="w-64 border-r bg-background">
+      <SideBarSection 
+        title="Python Programming" 
+        link="/python"  // Added required link prop
+      >
+        <Link 
+          href="/python"
+          className="block p-4 hover:bg-accent rounded-md text-sm font-medium"
+        >
+          Introduction to Python Programming
+        </Link>
       </SideBarSection>
     </SideBar>
   );

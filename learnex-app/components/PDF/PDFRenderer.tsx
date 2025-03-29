@@ -8,7 +8,7 @@ import "react-pdf/dist/Page/TextLayer.css";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useResizeDetector } from "react-resize-detector";
-import ContextMenu, { ContextMenuProps } from "./ContextMenu";
+import ContextMenu from "./ContextMenu";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
@@ -53,7 +53,6 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     e.preventDefault();
-    console.log("Right clicjked");
     const { pageX, pageY } = e;
 
     setContextMenu({
@@ -92,11 +91,10 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
 
   return (
     <div
-      className="flex flex-col items-center shadow rounded-md"
+      className="flex flex-col items-center shadow rounded-md w-full h-full"
       onContextMenu={(e) => handleContextMenu(e)}
       onSelect={(e) => {
         e.preventDefault();
-
         console.log("Selected", e);
       }}
     >
@@ -126,12 +124,12 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
           }
         }}
       />
-      <div className="flex-1 w-full h-full max-h-full flex items-center justify-center">
+      <div className="flex-1 w-full h-full max-h-full">
         <SimpleBar
           autoHide={false}
-          className="flex-1 flex items-center justify-center h-full max-h-[calc(100vh-10rem)]"
+          className="w-full h-full max-h-[calc(100vh-10rem)]"
         >
-          <div ref={ref}>
+          <div ref={ref} className="w-full">
             <Document
               file={url}
               loading={
@@ -153,14 +151,15 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
                 });
                 setLoading(false);
               }}
-              className="max-h-full flex flex-col justify-center items-center" // Ensure vertical stacking
+              className="w-full"
             >
-              {/* Render all pages dynamically */}
               {Array.from(new Array(totalPages), (el, index) => (
                 <Page
                   key={`page_${index + 1}`}
                   pageNumber={index + 1}
-                  className="my-4" // Add spacing between pages
+                  className="my-4 mx-auto"
+                  width={width ? width : undefined}
+                  scale={scale}
                 />
               ))}
             </Document>
