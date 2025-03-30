@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import SimpleBar from "simplebar-react";
 import PDFToolbar from "./PDFToolbar";
@@ -24,12 +24,37 @@ const DEFAULT_CONTEXT_MENU = {
 
 const PDFRenderer = ({ url }: PDFRendererProps) => {
   const { toast } = useToast();
+  const containerRef = useRef<HTMLDivElement>(null);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [scale, setScale] = useState(1);
   const [loading, setLoading] = useState(true);
   const [contextMenu, setContextMenu] = useState(DEFAULT_CONTEXT_MENU);
   const { width, ref } = useResizeDetector();
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const pageNumber = parseInt(entry.target.getAttribute('data-page-number') || '1');
+            setCurrentPage(pageNumber);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    const pages = containerRef.current?.getElementsByClassName('react-pdf__Page');
+    if (pages) {
+      Array.from(pages).forEach((page, index) => {
+        page.setAttribute('data-page-number', String(index + 1));
+        observer.observe(page);
+      });
+    }
+
+    return () => observer.disconnect();
+  }, [totalPages]);
 
   const handleNext = () => {
     if (currentPage < totalPages) {
@@ -97,6 +122,7 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
         e.preventDefault();
         console.log("Selected", e);
       }}
+      ref={containerRef}
     >
       <ContextMenu
         {...contextMenu}
@@ -153,15 +179,19 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
               }}
               className="w-full"
             >
-              {Array.from(new Array(totalPages), (el, index) => (
-                <Page
-                  key={`page_${index + 1}`}
-                  pageNumber={index + 1}
-                  className="my-4 mx-auto"
-                  width={width ? width : undefined}
-                  scale={scale}
-                />
-              ))}
+              {Array.from(new Array(totalPages), (el, index) => {
+                const pageNumber = index + 1;
+                return (
+                  <Page
+                    key={`page_${pageNumber}`}
+                    pageNumber={pageNumber}
+                    data-page-number={pageNumber}
+                    className="my-4 mx-auto"
+                    width={width ? width : undefined}
+                    scale={scale}
+                  />
+                );
+              })}
             </Document>
           </div>
         </SimpleBar>
