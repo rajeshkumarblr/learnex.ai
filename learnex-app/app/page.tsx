@@ -3,21 +3,15 @@ import React, { Suspense } from "react";
 import PDFRenderer from "@/components/PDF/PDFRenderer";
 import { Loader2 } from "lucide-react";
 
-const HomePage = () => {
-  const pdfUrl = "/pdfs/python-programming-optimized.pdf";
-  
+export default function HomePage() {
   return (
-    <div className="h-full">
-      <Suspense fallback={
-        <div className="flex items-center justify-center h-full">
-          <Loader2 className="animate-spin h-8 w-8" />
-          <span className="ml-2">Loading PDF...</span>
-        </div>
-      }>
-        <PDFRenderer url={pdfUrl} />
-      </Suspense>
+    <div className="flex-1 h-[calc(100vh-4rem)] flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <h1 className="text-4xl font-bold">Welcome to LearnEx</h1>
+        <p className="text-muted-foreground">
+          Select a book from the sidebar to start learning
+        </p>
+      </div>
     </div>
   );
-};
-
-export default HomePage;
+}
