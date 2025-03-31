@@ -7,7 +7,7 @@ const HomePage = () => {
   const pdfUrl = "/pdfs/python-programming-optimized.pdf";
   
   return (
-    <div className="flex-1 w-full h-[calc(100vh-4rem)]">
+    <div className="h-full">
       <Suspense fallback={
         <div className="flex items-center justify-center h-full">
           <Loader2 className="animate-spin h-8 w-8" />

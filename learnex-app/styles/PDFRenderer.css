@@ -2,8 +2,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
 .pdf-page {
-  margin: 16px 0; /* Add spacing between pages */
+  margin: 16px 0;
+  max-width: 100%;
 }
+
+/* Hide default scrollbar */
+.simplebar-track.simplebar-vertical {
+  width: 6px !important;
+}
+
+.simplebar-scrollbar:before {
+  background-color: #94a3b8;
+}   

@@ -6,6 +6,7 @@ import MainNav from "@/components/MainNav";
 import CustomSideBar from "@/components/CustomSidebar";
 import { Toaster } from "@/components/ui/toaster";
 import "simplebar-react/dist/simplebar.min.css";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,18 +17,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <html lang="en" className="overflow-hidden">
+      <body className={cn(inter.className, "overflow-hidden h-screen")}>
+        <ThemeProvider>
           <MainNav />
-          <main className="grid grid-cols-5 h-[calc(100vh-4.1rem)]">
+          <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
             <CustomSideBar />
-            <section className="col-span-4 px-4 py-4">{children}</section>
-          </main>
+            <div className="flex-1 overflow-hidden">{children}</div>
+          </div>
         </ThemeProvider>
         <Toaster />
       </body>

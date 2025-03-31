@@ -33,44 +33,83 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
   const { width, ref } = useResizeDetector();
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const pageNumber = parseInt(entry.target.getAttribute('data-page-number') || '1');
-            setCurrentPage(pageNumber);
-          }
+    if (!loading && totalPages > 0) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const pageNumber = parseInt(entry.target.getAttribute('data-page-number') || '1');
+              if (pageNumber !== currentPage) {
+                setCurrentPage(pageNumber);
+              }
+            }
+          });
+        },
+        { 
+          threshold: 0.7, // Increase threshold for better accuracy
+          root: containerRef.current?.querySelector('.simplebar-content-wrapper') || null,
+          rootMargin: '-10% 0px' // Add margin to improve detection
+        }
+      );
+
+      // Set up page observers after a small delay to ensure pages are rendered
+      setTimeout(() => {
+        const pages = document.querySelectorAll('.react-pdf__Page');
+        pages.forEach((page, index) => {
+          const pageNum = index + 1;
+          page.setAttribute('data-page-number', String(pageNum));
+          observer.observe(page);
         });
-      },
-      { threshold: 0.5 }
-    );
+      }, 100);
 
-    const pages = containerRef.current?.getElementsByClassName('react-pdf__Page');
-    if (pages) {
-      Array.from(pages).forEach((page, index) => {
-        page.setAttribute('data-page-number', String(index + 1));
-        observer.observe(page);
-      });
+      return () => observer.disconnect();
     }
+  }, [loading, totalPages, currentPage]);
 
-    return () => observer.disconnect();
+  // Add this effect to listen for page changes
+  useEffect(() => {
+    const handlePageChange = (e: CustomEvent<{ pageNumber: number }>) => {
+      const newPage = e.detail.pageNumber;
+      if (newPage > 0 && newPage <= totalPages) {
+        setCurrentPage(newPage);
+      }
+    };
+
+    window.addEventListener('pdfPageChange', handlePageChange as EventListener);
+    return () => {
+      window.removeEventListener('pdfPageChange', handlePageChange as EventListener);
+    };
   }, [totalPages]);
 
   const handleNext = () => {
     if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1);
+      const nextPage = currentPage + 1;
+      setCurrentPage(nextPage);
+      const element = document.querySelector(`[data-page-number="${nextPage}"]`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   };
 
   const handlePrevious = () => {
     if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
+      const prevPage = currentPage - 1;
+      setCurrentPage(prevPage);
+      const element = document.querySelector(`[data-page-number="${prevPage}"]`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   };
 
   const handlePageChange = (page: number) => {
     if (page > 0 && page <= totalPages) {
       setCurrentPage(page);
+      const element = document.querySelector(`[data-page-number="${page}"]`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   };
 
@@ -114,9 +153,15 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
     return [currentSelection, context];
   };
 
+  const handleDocumentLoadSuccess = async ({ numPages }: { numPages: number }) => {
+    setTotalPages(numPages);
+    setCurrentPage(1); // Reset to page 1 when document loads
+    setLoading(false);
+  };
+
   return (
     <div
-      className="flex flex-col items-center shadow rounded-md w-full h-full"
+      className="flex flex-col items-center shadow rounded-md w-full h-full overflow-hidden"
       onContextMenu={(e) => handleContextMenu(e)}
       onSelect={(e) => {
         e.preventDefault();
@@ -154,8 +199,9 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
         <SimpleBar
           autoHide={false}
           className="w-full h-full max-h-[calc(100vh-10rem)]"
+          style={{ overflowX: 'hidden' }}
         >
-          <div ref={ref} className="w-full">
+          <div ref={ref} className="w-full flex flex-col items-center">
             <Document
               file={url}
               loading={
@@ -165,10 +211,7 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
                   </div>
                 </div>
               }
-              onLoadSuccess={async ({ numPages }) => {
-                setTotalPages(numPages);
-                setLoading(false);
-              }}
+              onLoadSuccess={handleDocumentLoadSuccess}
               onLoadError={({}) => {
                 toast({
                   title: "Error",
@@ -186,7 +229,7 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
                     key={`page_${pageNumber}`}
                     pageNumber={pageNumber}
                     data-page-number={pageNumber}
-                    className="my-4 mx-auto"
+                    className="pdf-page"
                     width={width ? width : undefined}
                     scale={scale}
                   />

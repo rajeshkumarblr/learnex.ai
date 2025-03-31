@@ -79,4 +79,56 @@
     -webkit-appearance: none;
     margin: 0;
   }
+
+  .simplebar-scrollbar::before {
+    background-color: #94a3b8;
+    width: 5px;
+    right: 0;
+    left: auto;
+  }
+
+  .simplebar-track.simplebar-vertical {
+    width: 6px;
+    right: 0;
+    left: auto;
+  }
+
+  .simplebar-wrapper {
+    margin: 0 !important;
+  }
+
+  .simplebar-track.simplebar-vertical {
+    width: 6px !important;
+    margin-right: 0 !important;
+  }
+
+  .simplebar-scrollbar:before {
+    background-color: #94a3b8 !important;
+    opacity: 0.5;
+    width: 4px !important;
+    left: 1px !important;
+  }
+
+  .simplebar-track.simplebar-vertical .simplebar-scrollbar:before {
+    top: 2px;
+    bottom: 2px;
+  }
+
+  html, body {
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* Add these styles for SimpleBar customization */
+  .simplebar-track.simplebar-vertical {
+    width: 6px !important;
+    right: 0;
+  }
+
+  .simplebar-scrollbar:before {
+    background-color: #94a3b8;
+    opacity: 0.5;
+    width: 4px;
+    right: 1px;
+  }
 }
