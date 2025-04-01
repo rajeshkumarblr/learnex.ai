@@ -11,15 +11,14 @@ import {
 } from "../ui/dropdown-menu";
 
 interface PDFToolbarProps {
-  pages: number; // Remove optional
-  currentPage: number; // Remove optional
+  pages: number;
+  currentPage: number;
   isLoading?: boolean;
   onPrevious?: () => void;
   onNext?: () => void;
   onPageChange?: (page: number) => void;
-  scale?: number;
-  onScaleChange?: (scale: number) => void;
-  onSummarize?: (type: "page" | "chapter") => void;
+  title?: string;
+  chapterTitle?: string;
 }
 
 const ToolbarSkeleton = () => {
@@ -39,27 +38,41 @@ const PDFToolbar = ({
   onNext,
   onPageChange,
   isLoading = false,
-  scale = 1,
-  onScaleChange,
-  onSummarize,
+  title = "Introduction to Python Programming",
+  chapterTitle,
 }: PDFToolbarProps) => {
   return (
     <div className="h-14 w-full border-b border-zinc-200 flex items-center justify-between px-4">
-      {isLoading && <ToolbarSkeleton />}
-      {!isLoading && (
+      {isLoading ? (
+        <ToolbarSkeleton />
+      ) : (
         <>
-          <div className="flex items-center gap-1.5">
+          {/* Title Section - Left */}
+          <div className="flex-1 truncate">
+            <h1 className="text-lg">
+              <span className="font-semibold">{title}</span>
+              {chapterTitle && (
+                <span className="text-muted-foreground">
+                  : {chapterTitle}
+                </span>
+              )}
+            </h1>
+          </div>
+
+          {/* Page Controls - Right */}
+          <div className="flex items-center gap-1.5 ml-4">
             <Button
               disabled={currentPage <= 1}
               variant="ghost"
               aria-label="previous page"
               onClick={onPrevious}
             >
-              <ChevronUp className="h-4 w-4" /> {/* Changed from ChevronDown */}
+              <ChevronUp className="h-4 w-4" />
             </Button>
+
             <div className="flex items-center gap-1.5">
               <Input
-                className="w-14 h-8 appearance-none m-0" //no up down buttons
+                className="w-14 h-8 appearance-none m-0"
                 value={currentPage}
                 type="number"
                 min={1}
@@ -76,72 +89,15 @@ const PDFToolbar = ({
                 <span>{pages}</span>
               </p>
             </div>
+
             <Button
               disabled={currentPage >= pages}
               variant="ghost"
               aria-label="next page"
               onClick={onNext}
             >
-              <ChevronDown className="h-4 w-4" /> {/* Changed from ChevronUp */}
+              <ChevronDown className="h-4 w-4" />
             </Button>
-          </div>
-          <div className="flex justify-between space-x-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  aria-label="Summarize"
-                  className="gap-1.5"
-                >
-                  <Sparkles className="h-4 w-4" />
-                  Summarize
-                  <ChevronDown className="h-3 w-3 opacity-50" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem
-                  onSelect={() => onSummarize && onSummarize("page")}
-                >
-                  Page
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onSelect={() => onSummarize && onSummarize("chapter")}
-                >
-                  Entire Chapter
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" aria-label="zoom" className="gap-1.5">
-                  <ZoomIn className="h-4 w-4" />
-                  {(scale ?? 0) * 100} %
-                  <ChevronDown className="h-3 w-3 opacity-50" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem
-                  onSelect={() => onScaleChange && onScaleChange(0.5)}
-                >
-                  50%
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onSelect={() => onScaleChange && onScaleChange(1.0)}
-                >
-                  100%
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onSelect={() => onScaleChange && onScaleChange(1.5)}
-                >
-                  150%
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onSelect={() => onScaleChange && onScaleChange(2)}
-                >
-                  200%
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
         </>
       )}

@@ -1,19 +1,14 @@
-import { BookOpen } from "lucide-react";
+import { BookOpenCheck } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import ThemeToggleButton from "@/components/ThemeToggleButton";
 
 const MainNav = () => {
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background">
-      <div className="container flex h-16">
-        <Link href="/" className="items-center space-x-2 flex">
-          <BookOpen />
-          <span className="font-bold">Learnex</span>
-        </Link>
-        <div className="flex flex-1 items-center space-x-4 justify-end">
-          <ThemeToggleButton />
-        </div>
+    <header className="h-16 border-b px-4 flex items-center">
+      <div className="flex items-center gap-2">
+        <BookOpenCheck className="h-6 w-6 text-primary" />
+        <h1 className="text-xl font-bold">Learnex.ai</h1>
       </div>
     </header>
   );

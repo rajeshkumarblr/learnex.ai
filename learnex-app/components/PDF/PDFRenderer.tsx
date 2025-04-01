@@ -14,6 +14,8 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 interface PDFRendererProps {
   url: string;
+  title?: string;
+  chapterTitle?: string;
 }
 
 const DEFAULT_CONTEXT_MENU = {
@@ -22,12 +24,11 @@ const DEFAULT_CONTEXT_MENU = {
   visible: false,
 };
 
-const PDFRenderer = ({ url }: PDFRendererProps) => {
+const PDFRenderer = ({ url, title, chapterTitle }: PDFRendererProps) => {
   const { toast } = useToast();
   const containerRef = useRef<HTMLDivElement>(null);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [scale, setScale] = useState(1);
   const [loading, setLoading] = useState(true);
   const [contextMenu, setContextMenu] = useState(DEFAULT_CONTEXT_MENU);
   const { width, ref } = useResizeDetector();
@@ -160,15 +161,7 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
   };
 
   return (
-    <div
-      className="flex flex-col items-center shadow rounded-md w-full h-full overflow-hidden"
-      onContextMenu={(e) => handleContextMenu(e)}
-      onSelect={(e) => {
-        e.preventDefault();
-        console.log("Selected", e);
-      }}
-      ref={containerRef}
-    >
+    <div className="flex flex-col h-full overflow-hidden" ref={containerRef}>
       <ContextMenu
         {...contextMenu}
         onSummarize={() => selectPDFText()}
@@ -177,23 +170,13 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
       />
       <PDFToolbar
         pages={totalPages}
-        isLoading={loading}
         currentPage={currentPage}
         onNext={handleNext}
         onPrevious={handlePrevious}
         onPageChange={handlePageChange}
-        scale={scale}
-        onScaleChange={(scale) => setScale(scale)}
-        onSummarize={(type) => {
-          if (type === "page") {
-            selectPDFText();
-          } else {
-            selectAllPages();
-            toast({
-              description: "Coming Soon",
-            });
-          }
-        }}
+        isLoading={loading}
+        title={title}
+        chapterTitle={chapterTitle}
       />
       <div className="flex-1 w-full h-full max-h-full">
         <SimpleBar
@@ -231,7 +214,6 @@ const PDFRenderer = ({ url }: PDFRendererProps) => {
                     data-page-number={pageNumber}
                     className="pdf-page"
                     width={width ? width : undefined}
-                    scale={scale}
                   />
                 );
               })}
