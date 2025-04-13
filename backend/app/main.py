@@ -1,12 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse, JSONResponse
 from pathlib import Path
 from .database import db
 from .config import settings
 import validators
 from typing import List
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="LearnEx API")
 
@@ -95,12 +100,28 @@ async def download_book(book_id: str):
 
 @app.get("/api/categories")
 async def get_categories():
-    categories = list(db.categories.find())
-    for category in categories:
-        category["_id"] = str(category["_id"])
-        if "parent_id" in category:
-            category["parent_id"] = str(category["parent_id"])
-    return categories
+    try:
+        categories = list(db.categories.find())
+        
+        if not categories:
+            logger.warning("No categories found in database")
+            return []
+            
+        # Convert ObjectId to string for JSON serialization
+        for category in categories:
+            category["_id"] = str(category["_id"])
+            if "parent_id" in category:
+                category["parent_id"] = str(category["parent_id"])
+        
+        logger.info(f"Successfully fetched {len(categories)} categories")
+        return categories
+        
+    except Exception as e:
+        logger.error(f"Error fetching categories: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error fetching categories: {str(e)}"
+        )
 
 @app.get("/api/categories/{category_id}/books")
 async def get_books_by_category(category_id: str):
