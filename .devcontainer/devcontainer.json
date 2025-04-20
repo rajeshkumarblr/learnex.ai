@@ -14,12 +14,11 @@
                 "ms-python.vscode-pylance",
                 "dbaeumer.vscode-eslint",
                 "esbenp.prettier-vscode",
-                "ms-azuretools.vscode-docker",
-                "mongodb.mongodb-vscode"
+                "ms-azuretools.vscode-docker"
             ]
         }
     },
-    "postCreateCommand": "pip install -r /workspace/backend/requirements.txt && cd /workspace/frontend && npm install",
+    "postCreateCommand": "pip install -r backend/requirements.txt && cd frontend && npm install",
     "remoteUser": "vscode",
     "shutdownAction": "stopCompose"
 }
