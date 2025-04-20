@@ -57,12 +57,38 @@ learnex.ai/
 
 ## Getting Started
 
-### Prerequisites
-- Python 3.12+
-- Node.js 18+
-- MongoDB 7.0+
+### Running with DevContainer (Recommended)
+1. Prerequisites:
+   - Visual Studio Code
+   - Docker Desktop
+   - VS Code Remote - Containers extension
 
-### Backend Setup
+2. Setup Steps:
+   ```bash
+   # Clone the repository
+   git clone https://github.com/yourusername/learnex.ai.git
+   cd learnex.ai
+
+   # Open in VS Code
+   code .
+   ```
+
+3. When VS Code opens, you'll be prompted to "Reopen in Container" - click this to start
+4. The DevContainer will build and install all dependencies automatically
+5. Once the container is ready, open two terminals in VS Code:
+   ```bash
+   # Terminal 1 - Start Backend
+   cd /workspace/backend
+   python run.py
+
+   # Terminal 2 - Start Frontend
+   cd /workspace/frontend
+   npm run dev
+   ```
+
+### Manual Setup (Alternative)
+
+#### Backend Setup
 ```bash
 cd backend
 python -m venv venv
@@ -71,7 +97,7 @@ pip install -r requirements.txt
 python run.py
 ```
 
-### Frontend Setup
+#### Frontend Setup
 ```bash
 cd frontend
 npm install
@@ -92,6 +118,60 @@ API_PORT=8000
 ```bash
 sudo systemctl start mongodb
 ```
+
+## Using LearnEx.AI
+
+### Dashboard Overview
+![Dashboard Overview](/docs/images/dashboard.png)
+The main dashboard provides:
+- Left sidebar: Document categories and navigation
+- Center: PDF viewer with adaptive width
+- Right sidebar: AI assistance and notes
+
+### Key Features
+
+#### 1. Document Navigation
+![Document Navigation](/docs/images/navigation.png)
+- Use the expandable sidebar to browse documents
+- Click category headers to view available documents
+- Recent documents appear at the top
+
+#### 2. PDF Reading Experience
+![PDF Viewer](/docs/images/pdf-viewer.png)
+- Zoom controls (+ / -)
+- Page navigation
+- Bookmark important pages
+- Adjust viewer width
+
+#### 3. AI Assistance
+![AI Assistant](/docs/images/ai-assistant.png)
+- Ask questions about the content
+- Get summaries of sections
+- Request explanations of complex topics
+- Save important insights
+
+#### 4. Document Management
+![Document Management](/docs/images/document-management.png)
+- Upload new PDFs
+- Organize into categories
+- Add tags and descriptions
+- Search across all documents
+
+### Keyboard Shortcuts
+| Action | Windows/Linux | Mac |
+|--------|--------------|-----|
+| Toggle Sidebar | `Ctrl + B` | `⌘ + B` |
+| Next Page | `→` | `→` |
+| Previous Page | `←` | `←` |
+| Zoom In | `Ctrl + +` | `⌘ + +` |
+| Zoom Out | `Ctrl + -` | `⌘ + -` |
+| Search | `Ctrl + F` | `⌘ + F` |
+
+### Best Practices
+1. **Organization**: Keep documents organized in relevant categories
+2. **Tagging**: Use descriptive tags for easier search
+3. **AI Interaction**: Be specific with questions to get better responses
+4. **Regular Backups**: Export important notes and bookmarks regularly
 
 ## Running the Application
 
